@@ -2,19 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using API.Entities;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
+using API.DTOs;
+using API.Extensions;
+using API.Interfaces;
+using System.Linq;
 namespace API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-public class AdminController : ControllerBase
+public class AdminController(AppDbContext context, ITokenService tokenService) : ControllerBase
 {
-    private readonly AppDbContext _context;
-    public AdminController(AppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly AppDbContext _context = context;
+    private readonly ITokenService _tokenService = tokenService;
+
     [HttpGet("users")]
-    public async Task<ActionResult<IReadOnlyList<AppUser>>> GetUsers()
+    public async Task<ActionResult<IReadOnlyList<UserDto>>> GetUsers()
     {
-        return Ok(await _context.Users.ToListAsync<AppUser>());
+        var users = await _context.Users.ToListAsync();
+        return Ok(users.Select(u => u.ToDto(_tokenService)).ToList());
     }
 }

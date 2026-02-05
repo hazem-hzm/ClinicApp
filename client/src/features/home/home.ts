@@ -1,20 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Register } from '../features/account/register/register';
-import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  selector: 'app-home',
+  imports: [],
+  templateUrl: './home.html',
+  styleUrl: './home.css',
 })
-export class App implements OnInit {
+export class Home implements OnInit {
   private http = inject(HttpClient);
   protected title = 'Users';
   protected users = signal<any>([])
-  protected router = inject(Router);
 
   async ngOnInit() {
     this.users.set(await this.getUsers())

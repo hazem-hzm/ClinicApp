@@ -1,0 +1,10 @@
+<div class="card bg-base-300 w-1/2 mx-auto p-10 mt-10 shadow-xl mb-20">
+    <div class="card-title justify-center text-3xl text-primary">{{title}}</div>
+    <ul class="list">
+        @for (user of users(); track user.id) {
+        <li class="list-row items-center">
+                {{user.displayName}} {{user.email}}
+        </li>
+        }
+    </ul>
+</div>
