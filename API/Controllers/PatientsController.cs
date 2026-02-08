@@ -1,80 +1,115 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using API.Data;
-using API.Entities;
+using API.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Controllers
+namespace API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class PatientsController(AppDbContext context) : ControllerBase
 {
-    public class PatientsController(AppDbContext context) : BaseApiController
+
+    [Authorize(Roles = "Admin,Doctor")]
+    [HttpGet]
+    public async Task<ActionResult<IReadOnlyList<PatientDto>>> GetPatients()
     {
-        // GET: api/patients
-        [HttpGet]
-        public async Task<IActionResult> GetPatients()
-        {
-            var patients = await context.Patients.ToListAsync();
-            return Ok(patients);
-        }
-
-        // GET: api/patients/{id}
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPatient(int id)
-        {
-            var patient = await context.Patients.FindAsync(id);
-            if (patient == null) return NotFound();
-            return Ok(patient);
-        }
-
-        // POST: api/patients/{patientId}/appointments
-        [HttpPost("{patientId}/appointments")]
-        public async Task<IActionResult> CreateAppointment(string patientId, [FromBody] CreateAppointmentDto dto)
-        {
-            // Check if patient exists
-            var patient = await context.Patients.FindAsync(patientId);
-            if (patient == null) return NotFound($"Patient with id {patientId} not found.");
-
-            // Check if doctor exists
-            var doctor = await context.Doctors.FindAsync(dto.DoctorId);
-            if (doctor == null) return NotFound($"Doctor with id {dto.DoctorId} not found.");
-
-            var appointment = new Appointment
+        var patients = await context.Patients
+            .Select(p => new PatientDto
             {
-                PatientId = patientId,
-                DoctorId = dto.DoctorId,
-                AppointmentDate = dto.AppointmentDate,
-                Reason = dto.Reason,
-                Notes = dto.Notes,
-                Status = "Scheduled"
-            };
+                Id = p.Id,
+                DisplayName = p.User.DisplayName,
+                DateOfBirth = p.DateOfBirth
+            })
+            .ToListAsync();
 
-            context.Appointments.Add(appointment);
-            await context.SaveChangesAsync();
+        return Ok(patients);
+    }
 
-            return CreatedAtAction(
-                nameof(GetAppointmentById),
-                new { appointmentId = appointment.Id },
-                appointment
-            );
-        }
 
-        // GET: api/patients/appointments/{appointmentId}
-        [HttpGet("appointments/{appointmentId}")]
-        public async Task<IActionResult> GetAppointmentById(string appointmentId)
-        {
-            var appointment = await context.Appointments
-                .Include(a => a.Patient)
-                .Include(a => a.Doctor)
-                .FirstOrDefaultAsync(a => a.Id == appointmentId);
+    [Authorize(Roles = "Admin,Doctor")]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<PatientDto>> GetPatient(string id)
+    {
+        var patient = await context.Patients
+            .Where(p => p.Id == id)
+            .Select(p => new PatientDto
+            {
+                Id = p.Id,
+                DisplayName = p.User.DisplayName,
+                DateOfBirth = p.DateOfBirth
+            })
+            .FirstOrDefaultAsync();
 
-            if (appointment == null) return NotFound();
-            return Ok(appointment);
-        }
+        if (patient == null) return NotFound();
 
-        public class CreateAppointmentDto
-        {
-            public string DoctorId { get; set; } = null!;
-            public DateTime AppointmentDate { get; set; }
-            public string? Reason { get; set; }
-            public string? Notes { get; set; }
-        }
+        return Ok(patient);
+    }
+
+
+    [Authorize(Roles = "Patient")]
+    [HttpGet("me")]
+    public async Task<ActionResult<PatientDto>> GetMe()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var patient = await context.Patients
+            .Where(p => p.Id == userId)
+            .Select(p => new PatientDto
+            {
+                Id = p.Id,
+                DisplayName = p.User.DisplayName,
+                DateOfBirth = p.DateOfBirth
+            })
+            .FirstOrDefaultAsync();
+
+        if (patient == null) return NotFound();
+
+        return Ok(patient);
+    }
+
+
+    [Authorize(Roles = "Patient")]
+    [HttpGet("me/appointments")]
+    public async Task<ActionResult<IReadOnlyList<AppointmentDto>>> GetMyAppointments()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var appointments = await context.Appointments
+            .Where(a => a.PatientId == userId)
+            .Select(a => new AppointmentDto
+            {
+                Id = a.Id,
+                DoctorName = a.Doctor.User.DisplayName,
+                Date = a.Date,
+                Status = a.Status
+            })
+            .ToListAsync();
+
+        return Ok(appointments);
+    }
+
+
+    [Authorize(Roles = "Patient")]
+    [HttpGet("me/medical-records")]
+    public async Task<ActionResult<IReadOnlyList<MedicalRecordDto>>> GetMyMedicalRecords()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var records = await context.MedicalRecords
+            .Where(r => r.PatientId == userId)
+            .Select(r => new MedicalRecordDto
+            {
+                Id = r.Id,
+                DoctorName = r.Doctor.User.DisplayName,
+                Diagnosis = r.Diagnosis,
+                Treatment = r.Treatment,
+                CreatedAt = r.CreatedAt
+            })
+            .ToListAsync();
+
+        return Ok(records);
     }
 }

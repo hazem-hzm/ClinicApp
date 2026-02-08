@@ -10,7 +10,7 @@ public static class IdentitySeed
     {
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-        string[] roles = { "PATIENT", "DOCTOR" };
+        string[] roles = { "PATIENT", "DOCTOR", "ADMIN" };
 
         foreach (var role in roles)
         {
@@ -50,17 +50,17 @@ public static class IdentitySeed
     await userManager.AddToRoleAsync(user, "DOCTOR");
 
     // Prevent duplicate Doctor record
-    var doctorExists = await context.Doctors.AnyAsync(d => d.UserId == user.Id);
+    var doctorExists = context.Doctors.Any(d => d.Id == user.Id);
     if (doctorExists) return;
+
+    user.PhoneNumber = "123456789";
+    await userManager.UpdateAsync(user);
 
     var doctor = new Doctor
     {
-        UserId = user.Id,
-        FullName = "Dr. John Smith",
-        Specialization = "Cardiology",
-        PhoneNumber = "123456789",
-        Address = "123 Medical Street",
-        Gender = "Male"
+        Id = user.Id,
+        Specialty = "Cardiology",
+        YearsOfExperience = 10
     };
 
     context.Doctors.Add(doctor);

@@ -1,3 +1,4 @@
+using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService) : BaseApiController
+public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService, AppDbContext context) : BaseApiController
 {
     [HttpPost("register")] // api/account/register
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
@@ -19,14 +20,7 @@ public class AccountController(UserManager<AppUser> userManager, ITokenService t
             DisplayName = registerDto.DisplayName,
             Email = registerDto.Email,
             UserName = registerDto.Email,
-            Patient = new Patient
-            {
-                FullName = registerDto.DisplayName,
-                Gender = registerDto.Gender,
-                Address = registerDto.Address,
-                DateOfBirth = registerDto.DateOfBirth.ToDateTime(TimeOnly.MinValue),
-                PhoneNumber = registerDto.PhoneNumber
-            }
+            PhoneNumber = registerDto.PhoneNumber
         };
 
         var result = await userManager.CreateAsync(user, registerDto.Password);
@@ -42,6 +36,14 @@ public class AccountController(UserManager<AppUser> userManager, ITokenService t
         }
 
         await userManager.AddToRoleAsync(user, "Patient");
+
+        context.Patients.Add(new Patient
+        {
+            Id = user.Id,
+            DateOfBirth = registerDto.DateOfBirth,
+            Gender = registerDto.Gender
+        });
+        await context.SaveChangesAsync();
 
         await SetRefreshTokenCookie(user);
 

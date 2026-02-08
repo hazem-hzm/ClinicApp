@@ -1,15 +1,17 @@
 namespace API.Entities;
 
-public class Appointment
+public class MedicalRecord
 {
     public int Id { get; set; }
 
     public string PatientId { get; set; } = null!;
     public string DoctorId { get; set; } = null!;
 
-    public DateTime Date { get; set; }
-    public string Status { get; set; } = "Scheduled"; // Scheduled, Completed, Cancelled
+    public string Diagnosis { get; set; } = null!;
+    public string? Treatment { get; set; }
     public string? Notes { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // navigation
     public Patient Patient { get; set; } = null!;
