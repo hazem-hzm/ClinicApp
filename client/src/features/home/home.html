@@ -1,10 +1,40 @@
-<div class="card bg-base-300 w-1/2 mx-auto p-10 mt-10 shadow-xl mb-20">
-    <div class="card-title justify-center text-3xl text-primary">{{title}}</div>
-    <ul class="list">
-        @for (user of users(); track user.id) {
-        <li class="list-row items-center">
-                {{user.displayName}} {{user.email}}
-        </li>
-        }
-    </ul>
+<div class="card bg-base-300 w-4/5 mx-auto p-10 mt-10 shadow-xl mb-20">
+  <div class="flex justify-between items-center mb-6">
+    <div class="card-title text-3xl text-primary">{{ title }}</div>
+    <button class="btn btn-outline btn-error" type="button" (click)="logout()">
+      Logout
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
+    @for (user of users(); track user.id) {
+      <div
+        routerLink="/doctors/{{ user.id }}"
+        class="card cursor-pointer transition-all duration-300 ease-in-out 
+        transform hover:-translate-y-2 relative"
+      >
+        <img
+          src="/doctor.png"
+          alt="{{ user.displayName }} image"
+          class="rounded-lg"
+        />
+
+        <div
+          class="card-actions z-40 
+            absolute bottom-0 w-full px-3 py-2 rounded-b-lg
+            bg-gradient-to-t from-black via-black/75 to-black/0
+          "
+        >
+          <div class="flex flex-col text-white">
+            <span class="font-semibold">
+              {{ user.displayName }}
+            </span>
+            <span class="text-sm">
+              {{ user.specialty }} • {{ user.yearsOfExperience }} years experience
+            </span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
 </div>

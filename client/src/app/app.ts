@@ -21,6 +21,6 @@ export class App implements OnInit {
   }
 
   async getUsers() {
-    return lastValueFrom(this.http.get('https://localhost:5001/api/admin/users'));
+    return lastValueFrom(this.http.get('https://localhost:5001/api/doctors'));
   }
 }

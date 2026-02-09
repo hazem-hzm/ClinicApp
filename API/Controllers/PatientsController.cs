@@ -12,7 +12,7 @@ namespace API.Controllers;
 public class PatientsController(AppDbContext context) : ControllerBase
 {
 
-    [Authorize(Roles = "Admin,Doctor")]
+    [Authorize(Roles = "ADMIN,DOCTOR")]
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<PatientDto>>> GetPatients()
     {
@@ -29,7 +29,7 @@ public class PatientsController(AppDbContext context) : ControllerBase
     }
 
 
-    [Authorize(Roles = "Admin,Doctor")]
+    [Authorize(Roles = "ADMIN,DOCTOR")]
     [HttpGet("{id}")]
     public async Task<ActionResult<PatientDto>> GetPatient(string id)
     {
@@ -49,7 +49,7 @@ public class PatientsController(AppDbContext context) : ControllerBase
     }
 
 
-    [Authorize(Roles = "Patient")]
+    [Authorize(Roles = "PATIENT")]
     [HttpGet("me")]
     public async Task<ActionResult<PatientDto>> GetMe()
     {
@@ -71,7 +71,7 @@ public class PatientsController(AppDbContext context) : ControllerBase
     }
 
 
-    [Authorize(Roles = "Patient")]
+    [Authorize(Roles = "PATIENT")]
     [HttpGet("me/appointments")]
     public async Task<ActionResult<IReadOnlyList<AppointmentDto>>> GetMyAppointments()
     {
@@ -92,7 +92,7 @@ public class PatientsController(AppDbContext context) : ControllerBase
     }
 
 
-    [Authorize(Roles = "Patient")]
+    [Authorize(Roles = "PATIENT")]
     [HttpGet("me/medical-records")]
     public async Task<ActionResult<IReadOnlyList<MedicalRecordDto>>> GetMyMedicalRecords()
     {
@@ -112,4 +112,5 @@ public class PatientsController(AppDbContext context) : ControllerBase
 
         return Ok(records);
     }
+
 }

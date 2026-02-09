@@ -8,7 +8,15 @@
                 [(ngModel)]="creds.displayName" placeholder="Display name">
             <input type="password" class="input w-full" name="password" 
                 [(ngModel)]="creds.password" placeholder="Password">
-            
+            <select class="input w-full" name="gender" [(ngModel)]="creds.gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <input class="input w-full" name="address" [(ngModel)]="creds.address" placeholder="Address" required>
+            <input type="date" class="input w-full" name="dateOfBirth" [(ngModel)]="creds.dateOfBirth" placeholder="Date of Birth" required>
+            <input class="input w-full" name="phoneNumber" [(ngModel)]="creds.phoneNumber" placeholder="Phone Number">
             <div class="flex items-center justify-end gap-3">
                 <button (click)="cancel()" type="button" class="btn">Cancel</button>
                 <button class="btn btn-primary" type="submit">Register</button>
