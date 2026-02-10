@@ -19,7 +19,7 @@ export class Register {
   register() {
     this.accountService.register(this.creds).subscribe({
       next: response => {
-        this.router.navigateByUrl('/members');
+        this.router.navigateByUrl('/patient');
         console.log(response);
         this.cancel();
       },

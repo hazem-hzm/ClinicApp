@@ -1,0 +1,64 @@
+<div class="space-y-6">
+  <h2 class="text-xl font-semibold">Create medical record</h2>
+
+  <div *ngIf="error()" class="alert alert-error">
+    <span>{{ error() }}</span>
+  </div>
+  <div *ngIf="success()" class="alert alert-success">
+    <span>{{ success() }}</span>
+  </div>
+
+  <form class="space-y-4" (ngSubmit)="submit()">
+    <div class="flex space-x·-4">
+      <label class="label">
+        <span class="label-text font-semibold">Patient</span>
+      </label>
+      <select
+        class="select select-bordered w-full max-w-md"
+        name="patientId"
+        [(ngModel)]="form().patientId"
+        [disabled]="loadingPatients()"
+        required
+      >
+        <option value="" disabled selected>Select a patient</option>
+        <option *ngFor="let p of patients()" [value]="p.id">
+          {{ p.name }}
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <label class="label">
+        <span class="label-text font-semibold">Diagnosis</span>
+      </label>
+      <textarea
+        class="textarea textarea-bordered w-full"
+        name="diagnosis"
+        rows="3"
+        [(ngModel)]="form().diagnosis"
+        required
+      ></textarea>
+    </div>
+
+    <div>
+      <label class="label">
+        <span class="label-text font-semibold">Treatment / Notes</span>
+      </label>
+      <textarea
+        class="textarea textarea-bordered w-full"
+        name="treatment"
+        rows="3"
+        [(ngModel)]="form().treatment"
+      ></textarea>
+    </div>
+
+    <button
+      class="btn btn-primary"
+      type="submit"
+      [disabled]="submitting() || loadingPatients()"
+    >
+      {{ submitting() ? 'Saving...' : 'Save record' }}
+    </button>
+  </form>
+</div>
+

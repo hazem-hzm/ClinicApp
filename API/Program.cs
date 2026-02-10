@@ -53,6 +53,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
 
     await IdentitySeed.SeedRolesAsync(services);
+    await IdentitySeed.SeedAdminAsync(services);
     await IdentitySeed.SeedDoctorAsync(services);
 }
 app.Run();

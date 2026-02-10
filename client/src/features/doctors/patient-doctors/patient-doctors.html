@@ -1,0 +1,46 @@
+<div class="space-y-6">
+  <h2 class="text-xl font-semibold">Available doctors</h2>
+
+  <div *ngIf="error()" class="alert alert-error">
+    <span>{{ error() }}</span>
+  </div>
+
+  <div *ngIf="loading()" class="flex justify-center py-10">
+    <span class="loading loading-spinner loading-lg"></span>
+  </div>
+
+  <div *ngIf="!loading()">
+    <div *ngIf="doctors().length === 0" class="alert">
+      <span>No doctors found.</span>
+    </div>
+
+    <div *ngIf="doctors().length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
+      <div
+        *ngFor="let user of doctors()"
+        class="card cursor-pointer transition-all duration-300 ease-in-out transform hover:-translate-y-2 relative"
+        [routerLink]="'/doctors/' + user.id"
+      >
+        <img
+          src="/doctor.png"
+          alt="{{ user.displayName }} image"
+          class="rounded-lg"
+        />
+
+        <div
+          class="card-actions z-40 absolute bottom-0 w-full px-3 py-2 rounded-b-lg
+                 bg-gradient-to-t from-black via-black/75 to-black/0"
+        >
+          <div class="flex flex-col text-white">
+            <span class="font-semibold">
+              {{ user.displayName }}
+            </span>
+            <span class="text-sm">
+              {{ user.specialty }} • {{ user.yearsOfExperience }} years experience
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -12,13 +12,16 @@ import { AccountService } from '../../core/services/account-service';
 })
 export class Home implements OnInit {
   private http = inject(HttpClient);
-  private accountService = inject(AccountService);
+  protected accountService = inject(AccountService);
   private router = inject(Router);
   protected title = 'Doctors';
-  protected users = signal<any>([])
+  protected users = signal<any>([]);
 
   async ngOnInit() {
-    this.users.set(await this.getUsers())
+    // Only load doctors if the user is logged in
+    if (this.accountService.currentUser()) {
+      this.users.set(await this.getUsers());
+    }
   }
 
   async getUsers() {
@@ -33,7 +36,7 @@ export class Home implements OnInit {
       error: error => {
         console.error('Logout error', error);
         this.router.navigateByUrl('/login');
-      }
+      },
     });
   }
 }

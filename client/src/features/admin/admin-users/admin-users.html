@@ -1,0 +1,89 @@
+<div class="space-y-6">
+  <h2 class="text-xl font-semibold">Users</h2>
+
+  <div *ngIf="error()" class="alert alert-error">
+    <span>{{ error() }}</span>
+  </div>
+  <div *ngIf="success()" class="alert alert-success">
+    <span>{{ success() }}</span>
+  </div>
+
+  <div *ngIf="loading()" class="flex justify-center py-10">
+    <span class="loading loading-spinner loading-lg"></span>
+  </div>
+
+  <div *ngIf="!loading()">
+    <div *ngIf="users().length === 0" class="alert">
+      <span>No users found.</span>
+    </div>
+
+    <div *ngIf="users().length > 0" class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Display name</th>
+            <th>Email</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of users()">
+            <td>{{ u.displayName }}</td>
+            <td>{{ u.email }}</td>
+            <td class="text-right">
+              <button
+                class="btn btn-sm btn-primary"
+                type="button"
+                (click)="startPromote(u.id)"
+              >
+                Add as doctor
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="selectedUserId()" class="mt-8 card bg-base-200">
+      <div class="card-body space-y-4">
+        <h3 class="card-title text-lg">Create doctor profile</h3>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <div>
+            <label class="label">
+              <span class="label-text font-semibold">Specialty</span>
+            </label>
+            <input
+              class="input input-bordered w-full"
+              name="specialty"
+              [(ngModel)]="specialty"
+            />
+          </div>
+
+          <div>
+            <label class="label">
+              <span class="label-text font-semibold">Years of experience</span>
+            </label>
+            <input
+              class="input input-bordered w-full"
+              type="number"
+              min="1"
+              name="yearsOfExperience"
+              [(ngModel)]="yearsOfExperience"
+            />
+          </div>
+        </div>
+
+        <div class="flex gap-3 justify-end">
+          <button class="btn btn-ghost" type="button" (click)="cancelPromote()">
+            Cancel
+          </button>
+          <button class="btn btn-primary" type="button" (click)="createDoctor()">
+            Save doctor
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

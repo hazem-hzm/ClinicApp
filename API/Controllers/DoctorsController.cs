@@ -50,7 +50,7 @@ public class DoctorsController(AppDbContext context) : ControllerBase
     }
 
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "ADMIN")]
     [HttpPost]
     public async Task<ActionResult> CreateDoctor(CreateDoctorDto dto)
     {

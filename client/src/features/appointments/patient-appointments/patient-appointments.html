@@ -1,0 +1,52 @@
+<div class="space-y-6">
+  <h2 class="text-xl font-semibold">My appointments</h2>
+
+  <div *ngIf="error()" class="alert alert-error">
+    <span>{{ error() }}</span>
+  </div>
+
+  <div *ngIf="loading()" class="flex justify-center py-10">
+    <span class="loading loading-spinner loading-lg"></span>
+  </div>
+
+  <div *ngIf="!loading()">
+    <div *ngIf="appointments().length === 0" class="alert">
+      <span>You have no appointments yet.</span>
+    </div>
+
+    <div *ngIf="appointments().length > 0" class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Doctor</th>
+            <th>Status</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of appointments()">
+            <td>
+              <div class="font-semibold">{{ a.date | date: 'medium' }}</div>
+            </td>
+            <td>{{ a.doctorName }}</td>
+            <td>
+              <span class="badge badge-outline">{{ a.status }}</span>
+            </td>
+            <td class="text-right">
+              <button
+                class="btn btn-sm btn-error"
+                type="button"
+                (click)="cancel(a.id)"
+                [disabled]="a.status === 'Cancelled'"
+              >
+                Cancel
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,87 @@
+<div class="card bg-base-300 w-4/5 mx-auto p-8 mt-10 shadow-xl mb-20">
+  <button class="btn btn-ghost mb-4" type="button" (click)="backToDoctors()">
+    ← Back to doctors
+  </button>
+
+  <div *ngIf="doctor(); else loadingOrError" class="space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h2 class="card-title text-3xl text-primary">
+          Book an appointment
+        </h2>
+        <p class="mt-1 text-sm opacity-80">
+          Choose a date and time to see this doctor.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <img
+          src="/doctor.png"
+          alt="{{ doctor()?.displayName }} image"
+          class="w-20 h-20 rounded-full object-cover border-2 border-primary"
+        />
+        <div>
+          <div class="font-semibold text-lg">
+            {{ doctor()?.displayName }}
+          </div>
+          <div class="text-sm opacity-80">
+            {{ doctor()?.specialty }} • {{ doctor()?.yearsOfExperience }} years experience
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider my-4"></div>
+
+    <form class="space-y-4" (ngSubmit)="bookAppointment()">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10" >
+        <label class="label">
+          <span class="label-text font-semibold">Appointment date & time</span>
+        </label>
+        <input
+          class="input input-bordered w-full max-w-md"
+          type="datetime-local"
+          name="appointmentDate"
+          [(ngModel)]="selectedDateTime"
+          [min]="minDateTime"
+          required
+        />
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="submitting()"
+        >
+          {{ submitting() ? 'Booking...' : 'Book appointment' }}
+        </button>
+
+        <button 
+          class="btn btn-ghost"
+          type="button"
+          (click)="backToDoctors()"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+
+    <div *ngIf="error()" class="alert alert-error mt-4">
+      <span>{{ error() }}</span>
+    </div>
+    <div *ngIf="success()" class="alert alert-success mt-4">
+      <span>{{ success() }}</span>
+    </div>
+  </div>
+
+  <ng-template #loadingOrError>
+    <div *ngIf="error(); else loading" class="alert alert-error">
+      <span>{{ error() }}</span>
+    </div>
+    <ng-template #loading>
+      <span class="loading loading-spinner loading-md"></span>
+    </ng-template>
+  </ng-template>
+</div>
+

@@ -118,3 +118,4 @@ public class AppointmentsController(AppDbContext context) : ControllerBase
         return Ok("Appointment cancelled");
     }
 }
+

@@ -1,0 +1,31 @@
+<div class="space-y-4">
+  <h2 class="text-xl font-semibold">My information</h2>
+
+  <div *ngIf="error()" class="alert alert-error">
+    <span>{{ error() }}</span>
+  </div>
+
+  <div *ngIf="loading()" class="flex justify-center py-10">
+    <span class="loading loading-spinner loading-lg"></span>
+  </div>
+
+  <div *ngIf="!loading() && patient() as p">
+    <div class="card bg-base-200">
+      <div class="card-body space-y-2">
+        <div>
+          <span class="font-semibold">Name:</span>
+          <span>{{ p.displayName }}</span>
+        </div>
+        <div>
+          <span class="font-semibold">Email:</span>
+          <span>{{ accountService.currentUser()?.email }}</span>
+        </div>
+        <div>
+          <span class="font-semibold">Date of birth:</span>
+          <span>{{ p.dateOfBirth | date: 'mediumDate' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,43 @@
+<div class="space-y-6">
+  <h2 class="text-xl font-semibold">My medical records</h2>
+
+  <div *ngIf="error()" class="alert alert-error">
+    <span>{{ error() }}</span>
+  </div>
+
+  <div *ngIf="loading()" class="flex justify-center py-10">
+    <span class="loading loading-spinner loading-lg"></span>
+  </div>
+
+  <div *ngIf="!loading()">
+    <div *ngIf="records().length === 0" class="alert">
+      <span>You have no medical records yet.</span>
+    </div>
+
+    <div *ngIf="records().length > 0" class="space-y-4">
+      <div *ngFor="let r of records()" class="card bg-base-200">
+        <div class="card-body">
+          <div class="flex justify-between items-center mb-2">
+            <div class="font-semibold">
+              {{ r.doctorName }}
+            </div>
+            <div class="text-sm opacity-80">
+              {{ r.createdAt | date: 'medium' }}
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <span class="font-semibold">Diagnosis:</span>
+            <p>{{ r.diagnosis }}</p>
+          </div>
+
+          <div *ngIf="r.treatment">
+            <span class="font-semibold">Treatment / Notes:</span>
+            <p>{{ r.treatment }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
