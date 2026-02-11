@@ -17,6 +17,14 @@
         >
           Users
         </a>
+        <a
+          class="tab"
+          routerLink="create-doctor-user"
+          routerLinkActive="tab-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Create doctor user
+        </a>
       </div>
 
       <button class="btn btn-outline btn-error self-end" type="button" (click)="logout()">

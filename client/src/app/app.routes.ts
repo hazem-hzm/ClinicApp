@@ -14,6 +14,7 @@ import { PatientDoctors } from '../features/doctors/patient-doctors/patient-doct
 import { PatientInfo } from '../features/patient/patient-info/patient-info';
 import { AdminDashboard } from '../features/admin/admin-dashboard/admin-dashboard';
 import { AdminUsers } from '../features/admin/admin-users/admin-users';
+import { AdminCreateDoctorUser } from '../features/admin/admin-create-doctor-user/admin-create-doctor-user';
 
 export const routes: Routes = [
   { path: 'register', component: Register },
@@ -23,6 +24,7 @@ export const routes: Routes = [
     component: AdminDashboard,
     children: [
       { path: 'users', component: AdminUsers },
+      { path: 'create-doctor-user', component: AdminCreateDoctorUser },
       { path: '', pathMatch: 'full', redirectTo: 'users' },
     ],
   },

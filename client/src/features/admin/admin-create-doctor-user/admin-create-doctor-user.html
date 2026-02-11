@@ -1,0 +1,149 @@
+<div class="space-y-6">
+  <h2 class="text-xl font-semibold">Create doctor user</h2>
+  <p class="text-sm opacity-80">
+    Create a new user account and immediately attach a doctor profile.
+  </p>
+
+  <div *ngIf="error" class="alert alert-error">
+    <span>{{ error }}</span>
+  </div>
+  <div *ngIf="success" class="alert alert-success">
+    <span>{{ success }}</span>
+  </div>
+
+  <form class="space-y-6 max-w-2xl" (ngSubmit)="submit()">
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label class="label">
+          <span class="label-text font-semibold">Email</span>
+        </label>
+        <input
+          class="input input-bordered w-full"
+          name="email"
+          [(ngModel)]="creds.email"
+          type="email"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="label">
+          <span class="label-text font-semibold">Display name</span>
+        </label>
+        <input
+          class="input input-bordered w-full"
+          name="displayName"
+          [(ngModel)]="creds.displayName"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label class="label">
+          <span class="label-text font-semibold">Password</span>
+        </label>
+        <input
+          class="input input-bordered w-full"
+          name="password"
+          type="password"
+          [(ngModel)]="creds.password"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="label">
+          <span class="label-text font-semibold">Phone number</span>
+        </label>
+        <input
+          class="input input-bordered w-full"
+          name="phoneNumber"
+          [(ngModel)]="creds.phoneNumber"
+        />
+      </div>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-3">
+      <div>
+        <label class="label">
+          <span class="label-text font-semibold">Gender</span>
+        </label>
+        <select
+          class="select select-bordered w-full"
+          name="gender"
+          [(ngModel)]="creds.gender"
+          required
+        >
+          <option [ngValue]="''" disabled selected>Select gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="label">
+          <span class="label-text font-semibold">Date of birth</span>
+        </label>
+        <input
+          class="input input-bordered w-full"
+          type="date"
+          name="dateOfBirth"
+          [(ngModel)]="creds.dateOfBirth"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="label">
+          <span class="label-text font-semibold">Address</span>
+        </label>
+        <input
+          class="input input-bordered w-full"
+          name="address"
+          [(ngModel)]="creds.address"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="divider">Doctor details</div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label class="label">
+          <span class="label-text font-semibold">Specialty</span>
+        </label>
+        <input
+          class="input input-bordered w-full"
+          name="specialty"
+          [(ngModel)]="specialty"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="label">
+          <span class="label-text font-semibold">Years of experience</span>
+        </label>
+        <input
+          class="input input-bordered w-full"
+          type="number"
+          min="1"
+          name="yearsOfExperience"
+          [(ngModel)]="yearsOfExperience"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <button class="btn btn-primary" type="submit" [disabled]="loading">
+        {{ loading ? 'Creating...' : 'Create doctor user' }}
+      </button>
+    </div>
+  </form>
+</div>
+

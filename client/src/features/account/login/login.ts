@@ -4,6 +4,7 @@ import { LoginUser } from '../../../types/user';
 import { AccountService } from '../../../core/services/account-service';
 import { Router } from '@angular/router';
 import { getRolesFromToken } from '../../../core/utils/jwt';
+import { ToastService } from '../../../core/services/toast-service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ import { getRolesFromToken } from '../../../core/utils/jwt';
 export class Login {
   private accountService = inject(AccountService);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   protected creds: LoginUser = {
     email: '',
@@ -25,6 +27,7 @@ export class Login {
     this.accountService.login(this.creds).subscribe({
       next: response => {
         console.log('Logged in user', response);
+        this.toast.success('Logged in successfully');
         const roles = getRolesFromToken(response.token);
         if (roles.includes('ADMIN')) {
           this.router.navigateByUrl('/admin');
@@ -38,6 +41,7 @@ export class Login {
       },
       error: error => {
         console.error('Login error', error);
+        this.toast.error('Login failed. Please check your credentials.');
       },
     });
   }

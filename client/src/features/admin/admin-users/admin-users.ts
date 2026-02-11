@@ -4,6 +4,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { lastValueFrom } from 'rxjs';
 import { UserDto } from '../../../types/user';
+import { ToastService } from '../../../core/services/toast-service';
 
 type CreateDoctorPayload = {
   userId: string;
@@ -19,6 +20,7 @@ type CreateDoctorPayload = {
 })
 export class AdminUsers implements OnInit {
   private http = inject(HttpClient);
+  private toast = inject(ToastService);
 
   protected loading = signal(true);
   protected error = signal<string | null>(null);
@@ -44,6 +46,7 @@ export class AdminUsers implements OnInit {
       this.users.set(res);
     } catch {
       this.error.set('Failed to load users.');
+      this.toast.error('Failed to load users.');
     } finally {
       this.loading.set(false);
     }
@@ -88,12 +91,14 @@ export class AdminUsers implements OnInit {
         this.http.post('https://localhost:5001/api/doctors', payload)
       );
       this.success.set('Doctor profile created successfully.');
+      this.toast.success('Doctor profile created successfully.');
       this.selectedUserId.set(null);
     } catch (e: any) {
       const msg =
         (e?.error && (typeof e.error === 'string' ? e.error : null)) ||
         'Failed to create doctor profile.';
       this.error.set(msg);
+      this.toast.error(msg);
     }
   }
 }

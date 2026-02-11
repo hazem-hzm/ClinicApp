@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ToastService } from '../../../core/services/toast-service';
 
 interface Doctor {
   id: string;
@@ -22,6 +23,7 @@ export class DoctorAppointment implements OnInit {
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   protected doctor = signal<Doctor | null>(null);
   protected submitting = signal(false);
@@ -82,6 +84,7 @@ export class DoctorAppointment implements OnInit {
     this.http.post('https://localhost:5001/api/appointments', payload).subscribe({
       next: () => {
         this.success.set('Appointment created successfully.');
+        this.toast.success('Appointment created successfully.');
         this.submitting.set(false);
         setTimeout(() => this.router.navigateByUrl('/'), 1200);
       },
@@ -91,11 +94,12 @@ export class DoctorAppointment implements OnInit {
           (err?.error && (typeof err.error === 'string' ? err.error : null)) ||
           'Failed to create appointment.';
         this.error.set(msg);
+        this.toast.error(msg);
       },
     });
   }
 
   backToDoctors() {
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/patient/doctors');
   }
 }
